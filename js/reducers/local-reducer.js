@@ -17,7 +17,6 @@ export function GRIDDLE_LOADED_DATA(state, action, helpers) {
   const tempState = state
   .set('data', helpers.addKeyToRows(Immutable.fromJS(action.data)))
   .set('allColumns', columns)
-  .set('renderProperties', Immutable.fromJS(action.properties))
   .setIn(
     ['pageProperties', 'maxPage'],
     helpers.getPageCount(
@@ -32,7 +31,7 @@ export function AFTER_REDUCE(state, action, helpers) {
     .setIn(
       ['pageProperties', 'maxPage'],
       helpers.getPageCount(
-        helpers.getDataSet(state).size,
+        helpers.getDataSetSize(state),
         state.getIn(['pageProperties', 'pageSize'])))
 
   return tempState
@@ -99,5 +98,9 @@ export function GRIDDLE_FILTERED(state, action, helpers) {
 export function GRIDDLE_SORT(state, action, helpers) {
   if(!action.sortColumns || action.sortColumns.length < 1) { return state }
 
-  return helpers.sortByColumns(state, action.sortColumns)
+  // Update the sort columns
+  let tempState = helpers.updateSortColumns(state, action.sortColumns);
+
+  // Sort the data
+  return helpers.sortDataByColumns(tempState, action.sortColumns)
 }

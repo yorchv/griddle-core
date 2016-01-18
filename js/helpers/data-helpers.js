@@ -96,8 +96,8 @@ export function getVisibleDataColumns(data, columns) {
 }
 
 export function getDataColumns(state, data) {
-  if(state.get('renderProperties') && state.get('renderProperties').get('columnProperties').size !== 0) {
-
+  const renderProperties = state.get('renderProperties');
+  if(renderProperties && renderProperties.get('columnProperties') && renderProperties.get('columnProperties').size !== 0) {
     const keys = state
       .getIn(['renderProperties', 'columnProperties'])
       .sortBy(col => col.get('order')||MAX_SAFE_INTEGER)
